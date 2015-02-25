@@ -27,6 +27,15 @@ REPORT_CONTENT_TYPES = {
 REPORT_MYMETYPE = REPORT_CONTENT_TYPES['xls']  # backwards compatible
 
 
+def check_for_template(self, kwargs):
+    if not 'template' in kwargs and not hasattr(self, 'Meta'):
+        return False
+    elif not hasattr(self.Meta, 'template'):
+        return False
+    else:
+        return True
+
+
 def create_report_http_response(table, request):
     report_format = request.GET.get(table.param_report)
     report = table.as_report(request, report_format=report_format)
