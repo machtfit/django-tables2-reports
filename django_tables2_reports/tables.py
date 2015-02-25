@@ -42,7 +42,8 @@ from django.utils.html import strip_tags
 from django_tables2_reports import csv_to_xls
 from django_tables2_reports.utils import (DEFAULT_PARAM_PREFIX,
                                           get_excel_support,
-                                          generate_prefixto_report)
+                                          generate_prefixto_report,
+                                          check_for_template)
 
 
 # Unicode CSV writer, copied direct from Python docs:
@@ -85,8 +86,10 @@ class TableReport(tables.Table):
     exclude_from_report = ()  # the names of columns that should be excluded from report
 
     def __init__(self, *args, **kwargs):
-        if not 'template' in kwargs:
-            kwargs['template'] = 'django_tables2_reports/table.html'
+
+        if not check_for_template(self, kwargs): 
+           kwargs['template'] = 'django_tables2_reports/table.html'
+
         prefix_param_report = kwargs.pop('prefix_param_report', DEFAULT_PARAM_PREFIX)
         super(TableReport, self).__init__(*args, **kwargs)
         self.param_report = generate_prefixto_report(self, prefix_param_report)
