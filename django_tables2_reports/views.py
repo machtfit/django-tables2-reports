@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this software.  If not, see <http://www.gnu.org/licenses/>.
 
+from django.template import RequestContext
 
 from django_tables2.views import SingleTableView
 
@@ -39,5 +40,7 @@ class ReportTableView(SingleTableView):
 
     def render_to_response(self, context, **response_kwargs):
         if self.table_to_report:
+            context_instance=RequestContext(self.request, context)
+            self.table_to_report.context=context_instance
             return create_report_http_response(self.table_to_report, self.request)
         return super(ReportTableView, self).render_to_response(context, **response_kwargs)
