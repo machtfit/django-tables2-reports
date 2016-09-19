@@ -28,13 +28,10 @@ class ReportTableView(SingleTableView):
         Return a table object to use. The table has automatic support for
         sorting and pagination.
         """
-        options = {}
         table_class = self.get_table_class()
         table = table_class(self.get_table_data(), **kwargs)
-        paginate = self.get_table_pagination()
-        if paginate is not None:
-            options['paginate'] = paginate
-        self.table_to_report = RequestConfigReport(self.request, **options).configure(table)
+        paginate = self.get_table_pagination(table)
+        self.table_to_report = RequestConfigReport(self.request, paginate=paginate).configure(table)
         return table
 
     def render_to_response(self, context, **response_kwargs):
